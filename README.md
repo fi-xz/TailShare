@@ -1,5 +1,21 @@
 # TailShare
 
+<table align="center">
+  <tr>
+    <td width="50%" align="center">
+      <img src="assets/1.png" alt="TailShare Menu" /><br /><sub
+        >TailShare Menu</sub
+      >
+    </td>
+    <td width="50%" align="center">
+      <img src="assets/2.png" alt="TailShare on Context Menu" /><br /><sub
+        >TailShare on Context Menu</sub
+      >
+    </td>
+  </tr>
+</table>
+
+
 Adds a **Tailscale** target to the Windows 11 share sheet. Picking it lists your Taildrop
 devices (`tailscale file cp --targets`) and sends the shared files with
 `tailscale file cp <files...> <peer>:`. Results show as toasts. Folders are rejected
@@ -68,16 +84,16 @@ bar and context-menu icons pick an `.ico` from the app theme at runtime.
 
 ## Layout
 
-| Path | |
-|---|---|
-| `config.example.psd1` | template for `config.local.psd1` (package identity, install dir) |
-| `package/AppxManifest.template.xml` | sparse package manifest (share target, context menu, COM server) |
-| `src/TailShare/app.manifest.template` | `<msix>` element binding the exe to the package identity |
-| `src/TailShare/Program.cs` | reads `AppInstance.GetActivatedEventArgs()` before XAML starts |
-| `src/TailShare/ExplorerCommand.cs` | context-menu `IExplorerCommand` + COM class factory (`-Embedding`, idles out after 2 min) |
-| `src/TailShare/ShareFlow.cs` | items → paths → `ReportDataRetrieved` → pick → send → toast → `ReportCompleted` |
-| `src/TailShare/Tailscale.cs` | CLI wrapper and `--targets` parser |
-| `src/TailShare/PeerPickerWindow.xaml` | device picker / sending progress |
+| Path                                  |                                                                                           |
+| ------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `config.example.psd1`                 | template for `config.local.psd1` (package identity, install dir)                          |
+| `package/AppxManifest.template.xml`   | sparse package manifest (share target, context menu, COM server)                          |
+| `src/TailShare/app.manifest.template` | `<msix>` element binding the exe to the package identity                                  |
+| `src/TailShare/Program.cs`            | reads `AppInstance.GetActivatedEventArgs()` before XAML starts                            |
+| `src/TailShare/ExplorerCommand.cs`    | context-menu `IExplorerCommand` + COM class factory (`-Embedding`, idles out after 2 min) |
+| `src/TailShare/ShareFlow.cs`          | items → paths → `ReportDataRetrieved` → pick → send → toast → `ReportCompleted`           |
+| `src/TailShare/Tailscale.cs`          | CLI wrapper and `--targets` parser                                                        |
+| `src/TailShare/PeerPickerWindow.xaml` | device picker / sending progress                                                          |
 
 ## AI usage disclosure
 
