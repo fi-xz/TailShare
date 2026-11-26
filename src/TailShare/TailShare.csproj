@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <RootNamespace>TailShare</RootNamespace>
+    <AssemblyName>TailShare</AssemblyName>
+    <Version>1.0.0</Version>
+    <Nullable>enable</Nullable>
+    <!-- Source-generated COM interop ([GeneratedComInterface]/[LibraryImport]) for the Explorer command server. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+
+    <UseWinUI>true</UseWinUI>
+    <!-- Identity comes from the sparse package (package\AppxManifest.xml), not from MSIX tooling. -->
+    <WindowsPackageType>None</WindowsPackageType>
+    <!-- Required for dotnet publish to emit the app's .pri (compiled XAML lives there). -->
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <!-- No dependency on an installed Windows App Runtime or .NET runtime: everything ships in C:\Tools\TailShare. -->
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+
+    <!-- Program.cs owns Main so activation args are read before XAML starts. -->
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.7.0" />
+    <!-- Provides makeappx.exe / signtool.exe used by scripts\build.ps1 (no Windows SDK install needed). -->
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
+  </ItemGroup>
+
+</Project>

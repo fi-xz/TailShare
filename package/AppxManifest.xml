@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sparse package (packaging with external location).
+  The package itself only carries this manifest and Assets\; the executable lives in the
+  external location given to Add-AppxPackage -ExternalLocation (default C:\Tools\TailShare).
+  Identity Name/Publisher must match src\TailShare\app.manifest <msix .../> and the signing cert subject.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
+  IgnorableNamespaces="uap uap10 rescap com desktop4 desktop5">
+
+  <Identity Name="nx.TailShare" Publisher="CN=nx" Version="1.0.0.0" ProcessorArchitecture="neutral" />
+
+  <Properties>
+    <DisplayName>TailShare</DisplayName>
+    <PublisherDisplayName>nx</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="TailShare" Executable="TailShare.exe"
+                 uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
+      <uap:VisualElements
+        DisplayName="Tailscale"
+        Description="Send files to your devices with Tailscale Taildrop"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        AppListEntry="none" />
+      <Extensions>
+        <uap:Extension Category="windows.shareTarget">
+          <uap:ShareTarget Description="Send with Tailscale">
+            <uap:SupportedFileTypes>
+              <uap:SupportsAnyFileType />
+            </uap:SupportedFileTypes>
+            <uap:DataFormat>StorageItems</uap:DataFormat>
+          </uap:ShareTarget>
+        </uap:Extension>
+
+        <!-- "Send with Tailscale" in the Windows 11 top-level context menu. Explorer matches the
+             verb against the right-clicked item's type, so "Directory" is listed too (for a mixed
+             selection right-clicked on a folder); GetState hides it unless at least one file is
+             selected (folders are rejected by design). The CLSID must match
+             ExplorerCommandServer.Clsid in src\TailShare\ExplorerCommand.cs. -->
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop4:ItemType Type="*">
+              <desktop4:Verb Id="SendWithTailscale" Clsid="6B3C1C5E-8F7A-4E2D-9B1A-3D5E7F9A2C41" />
+            </desktop4:ItemType>
+            <desktop5:ItemType Type="Directory">
+              <desktop5:Verb Id="SendWithTailscale" Clsid="6B3C1C5E-8F7A-4E2D-9B1A-3D5E7F9A2C41" />
+            </desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+
+        <!-- Out-of-proc IExplorerCommand server: COM starts TailShare.exe on demand and appends -Embedding itself. -->
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="TailShare.exe" DisplayName="TailShare Explorer command">
+              <com:Class Id="6B3C1C5E-8F7A-4E2D-9B1A-3D5E7F9A2C41" DisplayName="Send with Tailscale" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+  </Capabilities>
+</Package>
