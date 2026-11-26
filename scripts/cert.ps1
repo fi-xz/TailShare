@@ -4,8 +4,8 @@
   One-time setup: creates a self-signed code-signing cert for the sparse package and trusts it.
 
 .DESCRIPTION
-  - Creates (or reuses) a cert with Subject = package Publisher ("CN=nx") in Cert:\CurrentUser\My.
-    build.ps1 signs with it from there by thumbprint; no PFX or password on disk.
+  - Creates (or reuses) a cert with Subject = package Publisher (config.local.psd1) in
+    Cert:\CurrentUser\My. build.ps1 signs with it from there by thumbprint; no PFX or password on disk.
   - Imports the public part into Cert:\LocalMachine\TrustedPeople so Add-AppxPackage accepts the package.
 
   Run from an elevated prompt of the SAME Windows account that runs build.ps1
@@ -13,11 +13,12 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$Subject = 'CN=nx',
     [int]$Years = 5
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'Config.ps1')
+$Subject = (Get-TailShareConfig).Publisher
 $codeSigningEku = '1.3.6.1.5.5.7.3.3'
 
 $cert = Get-ChildItem Cert:\CurrentUser\My |

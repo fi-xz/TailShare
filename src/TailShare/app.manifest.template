@@ -2,10 +2,12 @@
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
   <assemblyIdentity version="1.0.0.0" name="TailShare.app" />
 
-  <!-- Ties the exe to the sparse package so it runs with package identity. Must match package\AppxManifest.xml. -->
+  <!-- Ties the exe to the sparse package so it runs with package identity.
+       {{...}} are filled at build time from the TailSharePublisher / TailSharePackageName MSBuild
+       properties (scripts\build.ps1 passes them from config.local.psd1). -->
   <msix xmlns="urn:schemas-microsoft-com:msix.v1"
-        publisher="CN=nx"
-        packageName="nx.TailShare"
+        publisher="{{Publisher}}"
+        packageName="{{PackageName}}"
         applicationId="TailShare" />
 
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">

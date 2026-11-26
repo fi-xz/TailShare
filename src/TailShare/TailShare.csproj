@@ -11,22 +11,41 @@
     <!-- Source-generated COM interop ([GeneratedComInterface]/[LibraryImport]) for the Explorer command server. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Generated from app.manifest.template by GenerateAppManifest below. -->
+    <ApplicationManifest>$(BaseIntermediateOutputPath)app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
 
     <UseWinUI>true</UseWinUI>
-    <!-- Identity comes from the sparse package (package\AppxManifest.xml), not from MSIX tooling. -->
+    <!-- Identity comes from the sparse package (package\AppxManifest.template.xml), not from MSIX tooling. -->
     <WindowsPackageType>None</WindowsPackageType>
     <!-- Required for dotnet publish to emit the app's .pri (compiled XAML lives there). -->
     <EnableMsixTooling>true</EnableMsixTooling>
-    <!-- No dependency on an installed Windows App Runtime or .NET runtime: everything ships in C:\Tools\TailShare. -->
+    <!-- No dependency on an installed Windows App Runtime or .NET runtime: everything ships in the install dir. -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <SelfContained>true</SelfContained>
 
     <!-- Program.cs owns Main so activation args are read before XAML starts. -->
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
+
+  <!-- Package identity for the exe's <msix> element. scripts\build.ps1 passes these from
+       config.local.psd1; they must match the sparse package manifest. -->
+  <PropertyGroup>
+    <TailSharePackageName Condition="'$(TailSharePackageName)' == ''">TailShare</TailSharePackageName>
+    <TailSharePublisher Condition="'$(TailSharePublisher)' == ''">CN=TailShare</TailSharePublisher>
+  </PropertyGroup>
+
+  <Target Name="GenerateAppManifest" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <_AppManifestText>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\app.manifest.template'))</_AppManifestText>
+      <_AppManifestText>$(_AppManifestText.Replace('{{Publisher}}', $(TailSharePublisher.Replace('&amp;', '&amp;amp;').Replace('"', '&amp;quot;'))))</_AppManifestText>
+      <_AppManifestText>$(_AppManifestText.Replace('{{PackageName}}', $(TailSharePackageName)))</_AppManifestText>
+    </PropertyGroup>
+    <MakeDir Directories="$(BaseIntermediateOutputPath)" />
+    <WriteLinesToFile File="$(ApplicationManifest)" Lines="$([MSBuild]::Escape($(_AppManifestText)))"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.7.0" />
