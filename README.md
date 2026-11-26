@@ -2,19 +2,23 @@
 
 <table align="center">
   <tr>
-    <td width="50%" align="center">
+    <td width="33%" align="center">
       <img src="assets/1.png" alt="TailShare Menu" /><br /><sub
         >TailShare Menu</sub
       >
     </td>
-    <td width="50%" align="center">
-      <img src="assets/2.png" alt="TailShare on Context Menu" /><br /><sub
-        >TailShare on Context Menu</sub
+    <td width="33%" align="center">
+      <img src="assets/2.png" alt="Tailscale on Windows Sharing" /><br /><sub
+        >Tailscale on Windows Sharing</sub
+      >
+    </td>
+    <td width="33%" align="center">
+      <img src="assets/3.png" alt='"Send with Tailscale" on Context Menu' /><br /><sub
+        >"Send with Tailscale" on Context Menu</sub
       >
     </td>
   </tr>
 </table>
-
 
 Adds a **Tailscale** target to the Windows 11 share sheet. Picking it lists your Taildrop
 devices (`tailscale file cp --targets`) and sends the shared files with
